@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { checkHeading, replaceHeadingStarts } from "../helper";
+import React from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import ReactMarkdown from "react-markdown";
+import { checkHeading, replaceHeadingStarts } from "../helper";
 
-// Utility to sanitize code block language declarations
 const sanitizeCodeBlocks = (markdown) => {
   return markdown.replace(/```(\w+)(\s+[^`\n]*)?\n/g, "```$1\n");
 };
 
 const Answers = ({ ans, index, totalResults, type }) => {
-  const [heading, setHeading] = useState(false);
-  const [answer, setAnswer] = useState(ans);
-
-  useEffect(() => {
-    if (checkHeading(ans)) {
-      setHeading(true);
-      setAnswer(replaceHeadingStarts(ans));
-    } else {
-      setAnswer(sanitizeCodeBlocks(ans));
-    }
-  }, []);
+  const isHeading = checkHeading(ans);
+  const formattedAns = isHeading ? replaceHeadingStarts(ans) : sanitizeCodeBlocks(ans);
 
   const renderer = {
     code({ inline, className, children, ...props }) {
@@ -46,19 +36,19 @@ const Answers = ({ ans, index, totalResults, type }) => {
     <>
       {index === 0 && totalResults > 1 ? (
         <span className="pt-4 text-xl block dark:text-white text-zinc-950">
-          {answer}
+          {formattedAns}
         </span>
-      ) : heading ? (
+      ) : isHeading ? (
         <span className="pt-4 block text-lg dark:text-white text-zinc-950">
-          {answer}
+          {formattedAns}
         </span>
       ) : (
-        <span className={type === "q" ? "pl-1 " : "pl-5"}>
-          <ReactMarkdown components={renderer}>{answer}</ReactMarkdown>
+        <span className={type === "q" ? "pl-1" : "pl-5"}>
+          <ReactMarkdown components={renderer}>{formattedAns}</ReactMarkdown>
         </span>
       )}
     </>
   );
 };
 
-export default Answers;
+export default React.memo(Answers);

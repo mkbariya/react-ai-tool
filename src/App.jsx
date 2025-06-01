@@ -22,6 +22,7 @@ function App() {
     if (!trimmedQuestion && !selectHistory) return;
 
     const payloadData = trimmedQuestion || selectHistory;
+
     const payload = {
       contents: [
         {
@@ -36,14 +37,28 @@ function App() {
 
     if (trimmedQuestion) {
       let history = JSON.parse(localStorage.getItem("history")) || [];
-      history = [trimmedQuestion, ...history].slice(0, 19);
-      history = [...new Set(history)];
-      history = history.map(
-        (item) => item.charAt(0).toUpperCase() + item.slice(1).trim()
+
+      const normalizedHistory = history.map((item) =>
+        item.trim().toLowerCase()
       );
-      localStorage.setItem("history", JSON.stringify(history));
-      setRecentHistory(history);
+      const normalizedNewQuestion = trimmedQuestion.trim().toLowerCase();
+
+      const filteredHistory = normalizedHistory.filter(
+        (item) => item !== normalizedNewQuestion
+      );
+
+      filteredHistory.unshift(normalizedNewQuestion);
+
+      const limitedHistory = filteredHistory.slice(0, 20);
+
+      const displayHistory = limitedHistory.map(
+        (item) => item.charAt(0).toUpperCase() + item.slice(1)
+      );
+
+      localStorage.setItem("history", JSON.stringify(displayHistory));
+      setRecentHistory(displayHistory);
     }
+
     setLoading(true);
     const response = await fetch(URL, {
       method: "POST",
@@ -69,12 +84,13 @@ function App() {
   };
 
   useEffect(() => {
-    askQuestions();
+    if (selectHistory) askQuestions();
   }, [selectHistory]);
 
   const [darkMode, setDarkMode] = useState("dark");
+
   useEffect(() => {
-    if (darkMode == "dark") {
+    if (darkMode === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
@@ -83,13 +99,13 @@ function App() {
 
   return (
     <>
-      <div className={darkMode == "dark" ? "dark" : "light"}>
+      <div>
         <div className="flex flex-row text-center">
-          { show ?
+          {show ? (
             <div>
               <select
                 onChange={(e) => setDarkMode(e.target.value)}
-                className="fixed dark:text-white text-zinc-800 bottom-5 p-5 ml-7"
+                className="fixed dark:text-white text-zinc-800 bottom-6 left-5 p-3  "
               >
                 <option value="dark">Dark</option>
                 <option value="light">Light</option>
@@ -100,8 +116,25 @@ function App() {
                 setSelectHistory={setSelectHistory}
                 setShow={setShow}
               />
-            </div> : <div className="p-4 m-4"><button className="cursor-pointer" onClick={()=>setShow(true)}><svg xmlns="http://www.w3.org/2000/svg" height="28px" viewBox="0 -960 960 960" width="28px" fill="#e3e3e3"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"/></svg></button></div>
-          }
+            </div>
+          ) : (
+            <div className="p-4 m-4">
+              <button
+                className="cursor-pointer bg-zinc-500 dark:bg-zinc-900"
+                onClick={() => setShow(true)}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  height="28px"
+                  viewBox="0 -960 960 960"
+                  width="28px"
+                  fill="#e3e3e3"
+                >
+                  <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+                </svg>
+              </button>
+            </div>
+          )}
           <div className="flex-8/12 p-5">
             <h1 className="text-4xl bg-clip-text text-transparent bg-gradient-to-r from-pink-700 to-violet-700 p-3 ">
               Hello User, Ask me Anything
@@ -129,7 +162,7 @@ function App() {
             )}
             <div
               ref={scrollToAns}
-              className="h-[73vh]  overflow-y-auto  scrollbar-dark dark:bg-zinc-900 bg-amber-100  rounded-lg dark:text-zinc-300 text-zinc-800 "
+              className="h-[73vh] overflow-y-auto scrollbar-dark dark:bg-zinc-900 bg-amber-100 rounded-lg dark:text-zinc-300 text-zinc-800 "
             >
               <ul>
                 {results.map((item, index) => (
@@ -146,7 +179,7 @@ function App() {
                 value={questions}
                 onKeyDown={(e) => e.key === "Enter" && askQuestions()}
               />
-              <button className="cursor-pointer " onClick={askQuestions}>
+              <button className="cursor-pointer" onClick={askQuestions}>
                 Ask
               </button>
             </div>

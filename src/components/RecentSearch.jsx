@@ -28,7 +28,7 @@ const RecentSearch = ({
           <div>
             <h1 className="text-xl dark:text-white mb-4 flex justify-center  text-zinc-800">
               <span>Recent Search</span>
-              <button className="cursor-pointer ml-2" onClick={clearHistory}>
+              <button className="cursor-pointer ml-2 bg-zinc-600" onClick={clearHistory}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="25px"
@@ -42,7 +42,7 @@ const RecentSearch = ({
             </h1>
           </div>
           <div>
-            <button className="cursor-pointer" onClick={()=>setShow(false)}>
+            <button className="cursor-pointer bg-zinc-500" onClick={()=>setShow(false)}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 height="24px"
