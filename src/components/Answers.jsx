@@ -35,11 +35,11 @@ const Answers = ({ ans, index, totalResults, type }) => {
   return (
     <>
       {index === 0 && totalResults > 1 ? (
-        <span className="pt-4 text-xl block dark:text-white text-zinc-950">
+        <span className="pt-4  sm:text-xl text-sm block dark:text-white text-zinc-950">
           {formattedAns}
         </span>
       ) : isHeading ? (
-        <span className="pt-4 block text-lg dark:text-white text-zinc-950">
+        <span className="pt-4 block sm:text-lg text-sm  dark:text-white text-zinc-950">
           {formattedAns}
         </span>
       ) : (

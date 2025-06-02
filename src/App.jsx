@@ -12,7 +12,7 @@ function App() {
   const [show, setShow] = useState(false);
 
   const [recentHistory, setRecentHistory] = useState(
-    JSON.parse(localStorage.getItem("history"))
+    JSON.parse(localStorage.getItem("history")) || []
   );
 
   const [selectHistory, setSelectHistory] = useState("");
@@ -98,49 +98,53 @@ function App() {
   }, [darkMode]);
 
   return (
-    <>
-      <div>
-        <div className="flex flex-row text-center">
-          {show ? (
-            <div>
+    <div className="min-h-screen">
+      <div className="flex sm:flex-row h-screen sm:text-center ">
+        {show ? (
+          <div>
+            <div className="fixed sm:bottom-20 bottom-60">
               <select
                 onChange={(e) => setDarkMode(e.target.value)}
-                className="fixed dark:text-white text-zinc-800 bottom-6 left-5 p-3  "
+                className=" dark:text-white text-zinc-800 left-5 p-3 z-50"
               >
                 <option value="dark">Dark</option>
                 <option value="light">Light</option>
               </select>
-              <RecentSearch
-                recentHistory={recentHistory}
-                setRecentHistory={setRecentHistory}
-                setSelectHistory={setSelectHistory}
-                setShow={setShow}
-              />
             </div>
-          ) : (
-            <div className="p-4 m-4">
-              <button
-                className="cursor-pointer bg-zinc-500 dark:bg-zinc-900"
-                onClick={() => setShow(true)}
+            <RecentSearch
+              recentHistory={recentHistory}
+              setRecentHistory={setRecentHistory}
+              setSelectHistory={setSelectHistory}
+              setShow={setShow}
+            />
+          </div>
+        ) : (
+          <div className="sm:p-4 sm:m-4 p-2 m-2">
+            <button
+              className="cursor-pointer bg-zinc-500 dark:bg-zinc-900"
+              onClick={() => setShow(true)}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                height="28px"
+                viewBox="0 -960 960 960"
+                width="28px"
+                fill="#e3e3e3"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="28px"
-                  viewBox="0 -960 960 960"
-                  width="28px"
-                  fill="#e3e3e3"
-                >
-                  <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                </svg>
-              </button>
-            </div>
-          )}
-          <div className="flex-8/12 p-5">
-            <h1 className="text-4xl bg-clip-text text-transparent bg-gradient-to-r from-pink-700 to-violet-700 p-3 ">
+                <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+              </svg>
+            </button>
+          </div>
+        )}
+
+        <div className="flex-1 p-4 md:p-5 w-full">
+          <div>
+            <h1 className="text-2xl  sm:text-4xl bg-clip-text text-transparent bg-gradient-to-r from-pink-700 to-violet-700 p-3 sm:text-center ">
               Hello User, Ask me Anything
             </h1>
+
             {loading && (
-              <div role="status">
+              <div role="status" className="my-4 text-center">
                 <svg
                   aria-hidden="true"
                   className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-purple-600"
@@ -160,33 +164,38 @@ function App() {
                 <span className="sr-only">Loading...</span>
               </div>
             )}
-            <div
-              ref={scrollToAns}
-              className="h-[73vh] overflow-y-auto scrollbar-dark dark:bg-zinc-900 bg-amber-100 rounded-lg dark:text-zinc-300 text-zinc-800 "
+          </div>
+
+          <div
+            ref={scrollToAns}
+            className="h-[55vh] sm:h-[73vh] overflow-y-auto scrollbar-dark dark:bg-zinc-900 bg-amber-100 rounded-lg dark:text-zinc-300 text-zinc-800 p-4"
+          >
+            <ul>
+              {results.map((item, index) => (
+                <QuestionAnswer key={index} item={item} index={index} />
+              ))}
+            </ul>
+          </div>
+
+          <div className="dark:bg-zinc-800 bg-red-100 sm:mx-auto sm:w-96 w-56 mr-10 p-1 mt-4 pr-5 rounded-4xl border border-zinc-800 flex h-12 dark:text-white text-zinc-800">
+            <input
+              type="text"
+              placeholder="Ask Me Anything"
+              className="sm:w-full sm:h-full p-3 outline-none w-40 text-sm"
+              onChange={(e) => setQuestions(e.target.value)}
+              value={questions}
+              onKeyDown={(e) => e.key === "Enter" && askQuestions()}
+            />
+            <button
+              className="cursor-pointer sm:px-4 pl-5 text-sm"
+              onClick={askQuestions}
             >
-              <ul>
-                {results.map((item, index) => (
-                  <QuestionAnswer key={index} item={item} index={index} />
-                ))}
-              </ul>
-            </div>
-            <div className="dark:bg-zinc-800 bg-red-100 w-1/2 p-1 pr-5 m-auto rounded-4xl border border-zinc-800 flex h-16 dark:text-white text-zinc-800">
-              <input
-                type="text"
-                placeholder="Ask Me Anything"
-                className="w-full h-full p-3 outline-none"
-                onChange={(e) => setQuestions(e.target.value)}
-                value={questions}
-                onKeyDown={(e) => e.key === "Enter" && askQuestions()}
-              />
-              <button className="cursor-pointer" onClick={askQuestions}>
-                Ask
-              </button>
-            </div>
+              Ask
+            </button>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

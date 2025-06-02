@@ -6,7 +6,7 @@ const QuestionAnswer = ({ item, index }) => {
     return (
       <div className="flex justify-end">
         <li
-          className="text-right p-1 border-8 dark:border-zinc-700 dark:bg-zinc-700 bg-red-100 border-red-100 rounded-tl-3xl rounded-bl-3xl rounded-br-3xl w-fit m-5"
+          className="text-right text-sm p-1 border-8 dark:border-zinc-700 dark:bg-zinc-700 bg-red-100 border-red-100 rounded-tl-3xl rounded-bl-3xl rounded-br-3xl w-fit m-5"
           key={`q-${index}`}
         >
           <Answers
