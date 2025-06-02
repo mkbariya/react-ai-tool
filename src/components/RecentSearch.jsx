@@ -25,17 +25,17 @@ const RecentSearch = ({
     <>
       <div className="w-40 sm:w-70 dark:bg-zinc-800  bg-red-100 h-full pt-5">
         <div className="flex justify-between p-4">
-          <div className="mr-2">
+          <div className="">
             <h1 className="sm:text-xl text-lg dark:text-white mb-4 flex justify-center  text-zinc-800">
               <span>Recent Search</span>
-              <button className="cursor-pointer ml-2 h-6 bg-zinc-600" onClick={clearHistory}>
+              <button className="cursor-pointer ml-2  bg-zinc-600" onClick={clearHistory}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-               
+               height="25px"
                   viewBox="0 -960 960 960"
-                 
+                 width="25px"
                   fill="#e3e3e3"
-                  className="sm:w-25 sm:h-25 w-5 "
+                  
                 >
                   <path d="M312-144q-29.7 0-50.85-21.15Q240-186.3 240-216v-480h-48v-72h192v-48h192v48h192v72h-48v479.57Q720-186 698.85-165T648-144H312Zm336-552H312v480h336v-480ZM384-288h72v-336h-72v336Zm120 0h72v-336h-72v336ZM312-696v480-480Z" />
                 </svg>
